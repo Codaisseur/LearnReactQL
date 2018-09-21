@@ -92,6 +92,7 @@
     "react-helmet": "^5.2.0",
     "react-hot-loader": "^4.3.4",
     "react-router-dom": "^4.3.1",
+    "spotify-graphql": "^1.4.0",
     "styled-components": "^3.4.2"
   }
 }

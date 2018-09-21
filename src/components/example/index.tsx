@@ -10,7 +10,7 @@ import * as React from "react";
 /* Local */
 
 // Counter, controlled by local Apollo state
-import Count from "./count";
+// import Count from "./count";
 
 // Hacker News GraphQL example
 import HackerNews from "./hackernews";
@@ -21,7 +21,6 @@ import HackerNews from "./hackernews";
 export default () => (
   <>
     <h1>Hi from ReactQL</h1>
-    <Count />
     <HackerNews />
   </>
 );

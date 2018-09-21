@@ -63,7 +63,7 @@ export function createClient(): ApolloClient<NormalizedCacheObject> {
       // just using a public playground to pull sample API data.
       new HttpLink({
         credentials: "same-origin",
-        uri: "https://graphqlhub.com/graphql",
+        uri: "https://spotify-api-graphql-console.herokuapp.com/",
       }),
     ]),
     // On the server, enable SSR mode

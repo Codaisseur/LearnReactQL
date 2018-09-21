@@ -14,13 +14,10 @@ import gql from "graphql-tag";
 // GraphQL query for retrieving Hacker News top-stories from the
 // https://graphqlhub.com/playground sample server endpoint
 export default gql`
-  {
-    hn {
-      topStories {
-        id
-        title
-        url
-      }
-    }
+{
+  me{
+    birthday
+    email
   }
+}
 `;
