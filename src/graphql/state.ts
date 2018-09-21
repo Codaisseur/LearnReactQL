@@ -11,7 +11,7 @@ import { ClientStateConfig, withClientState } from "apollo-link-state";
 /* Local */
 
 // Queries
-import getCountQuery from "@/queries/getCount";
+import { authQuery } from "@/components/auth/queries";
 
 // ----------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ import getCountQuery from "@/queries/getCount";
 
 /* STATE */
 export interface IState {
-  count: number;
+  authenticated: boolean;
 }
 
 // 'Root', which contains the 'State' key
@@ -44,11 +44,9 @@ export default function createState(cache: InMemoryCache): ApolloLink {
     resolvers: {
       Mutation: {
 
-        // Sample mutation to increment the local `count` by 1
-        incrementCount() {
+        setAuthenticated() {
 
-          // Get the existing state
-          const state = getState(getCountQuery);
+          const state = getState(authQuery);
 
           // Create new state. Note that we're assigning this to a new
           // constant, and not simply incrementing the existing `count`
@@ -57,7 +55,7 @@ export default function createState(cache: InMemoryCache): ApolloLink {
           // to the cache
           const newState = {
             ...state,
-            count: state.count + 1,
+            authenticated: true,
           };
 
           // Write the new count var to the cache
@@ -75,7 +73,7 @@ export default function createState(cache: InMemoryCache): ApolloLink {
     opt.defaults = {
       state: {
         __typename: "State",
-        count: 0,
+        authenticated: false,
       },
     } as IRoot;
   }

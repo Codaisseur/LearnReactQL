@@ -43,7 +43,7 @@ export default function(output: Output) {
   return async (ctx: Context) => {
 
     // Create a new Apollo client
-    const client = createClient();
+    const client = createClient(ctx);
 
     // Create a new styled-components instance
     const sheet = new ServerStyleSheet();
