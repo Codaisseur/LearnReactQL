@@ -13,9 +13,6 @@ import { Route, Switch } from "react-router-dom";
 
 /* Local */
 
-// Styles - import for side-effects
-import "@/global/styles";
-
 // Components
 import ScrollTop from "@/components/helpers/scrollTop";
 

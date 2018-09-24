@@ -18,7 +18,7 @@ export interface IHtmlProps {
   js: string;
   helmet: HelmetData;
   scripts?: string[];
-  styles?: Array<React.ReactElement<{}>>;
+  styles?: string;
   window?: {
     [key: string]: object;
   };
@@ -39,7 +39,7 @@ export default class Html extends React.PureComponent<IHtmlProps> {
             {helmet.style.toComponent()}
             {helmet.link.toComponent()}
             {css && <link rel="stylesheet" href={css} />}
-            {styles}
+            {styles && <style id="jss-server-side">${styles}</style>}
             {helmet.script.toComponent()}
             {helmet.noscript.toComponent()}
           </head>
