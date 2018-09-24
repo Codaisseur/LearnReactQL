@@ -52,6 +52,8 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "@material-ui/core": "^3.1.0",
+    "@material-ui/icons": "^3.0.1",
     "@types/history": "^4.7.0",
     "@types/kcors": "^2.2.3",
     "@types/koa": "^2.0.46",
@@ -64,10 +66,12 @@
     "@types/react-dom": "^16.0.7",
     "@types/react-helmet": "^5.0.7",
     "@types/react-hot-loader": "^4.1.0",
+    "@types/react-jss": "^8.6.0",
     "@types/react-router-dom": "^4.3.0",
     "apollo-cache-inmemory": "^1.2.8",
     "apollo-client": "^2.4.0",
     "apollo-link": "^1.2.2",
+    "apollo-link-context": "^1.0.9",
     "apollo-link-error": "^1.1.0",
     "apollo-link-http": "^1.5.4",
     "apollo-link-state": "^0.4.1",
@@ -91,7 +95,9 @@
     "react-dom": "^16.4.2",
     "react-helmet": "^5.2.0",
     "react-hot-loader": "^4.3.4",
+    "react-jss": "^8.6.1",
     "react-router-dom": "^4.3.1",
+    "react-transition-group": "^2.4.0",
     "styled-components": "^3.4.2"
   }
 }

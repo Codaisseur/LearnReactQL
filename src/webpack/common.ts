@@ -87,6 +87,11 @@ export default (_ssr: boolean /* <-- not currently used */) => {
             },
           ],
         },
+        {
+          include: /node_modules/,
+          test: /\.mjs$/,
+          type: "javascript/auto",
+        },
       ],
     },
 
@@ -98,7 +103,7 @@ export default (_ssr: boolean /* <-- not currently used */) => {
       alias: {
         "@": path.resolve(root, "src"),
       },
-      extensions: [".ts", ".tsx", ".js"],
+      extensions: [".ts", ".tsx", ".webpack.js", ".web.js", ".mjs", ".js"],
       modules: [
         path.resolve(root, "node_modules"),
       ],

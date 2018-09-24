@@ -7,15 +7,24 @@
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
+import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
+import { Context } from "koa";
 
 /* Local */
 import createState from "./state";
 
+export const API_URL = process.env.NODE_ENV === "production" ? "https://crystal.codaisseur.com" : "http://localhost:4000";
+export const JWT_TOKEN_KEY = "CodaisseurJWT";
+
+export const storeToken = (token: string) => {
+  window.localStorage.setItem(JWT_TOKEN_KEY, token);
+};
+
 // ----------------------------------------------------------------------------
 
-export function createClient(): ApolloClient<NormalizedCacheObject> {
+export function createClient(ctx?: Context): ApolloClient<NormalizedCacheObject> {
 
   // Create the cache first, which we'll share across Apollo tooling.
   // This is an in-memory cache. Since we'll be calling `createClient` on
@@ -46,7 +55,7 @@ export function createClient(): ApolloClient<NormalizedCacheObject> {
         if (graphQLErrors) {
           graphQLErrors.map(({ message, locations, path }) =>
             console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+              `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`,
             ),
           );
         }
@@ -55,15 +64,41 @@ export function createClient(): ApolloClient<NormalizedCacheObject> {
         }
       }),
 
+      setContext(() => {
+        let token: string | null = null;
+
+        if (SERVER) {
+          const authorization = ctx &&
+            ctx.req.headers.authorization &&
+            ctx.req.headers.authorization.match(/Bearer (.*)/);
+
+          if (authorization) {
+            token = authorization[1];
+          }
+        }
+
+        if (!SERVER) {
+          token = window.localStorage.getItem(JWT_TOKEN_KEY);
+        }
+
+        if (token) {
+          return {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+        }
+
+        return {};
+      }),
+
       // Connect local Apollo state. This is our primary mechanism for
       // managing 'flux'/local app data, in lieu of Redux or MobX
       createState(cache),
 
-      // External GraphQL server to connect to. CHANGE THIS -- by default, it's
-      // just using a public playground to pull sample API data.
       new HttpLink({
         credentials: "same-origin",
-        uri: "https://graphqlhub.com/graphql",
+        uri: API_URL,
       }),
     ]),
     // On the server, enable SSR mode

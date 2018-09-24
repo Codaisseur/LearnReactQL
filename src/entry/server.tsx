@@ -6,6 +6,12 @@
 /* NPM */
 import "cross-fetch/polyfill";
 
+import {
+  createGenerateClassName,
+  createMuiTheme,
+  MuiThemeProvider,
+} from "@material-ui/core/styles";
+
 import { Context } from "koa";
 
 import * as React from "react";
@@ -18,14 +24,15 @@ import * as ReactDOMServer from "react-dom/server";
 // title, meta info, etc along with the initial HTML
 import Helmet from "react-helmet";
 
+import { SheetsRegistry } from "react-jss";
+import JssProvider from "react-jss/lib/JssProvider";
+
 import { StaticRouter } from "react-router";
-import { ServerStyleSheet, StyleSheetManager } from "styled-components";
 
 /* Local */
 import Root from "@/components/root";
 import { createClient } from "@/graphql/apollo";
 import Output from "@/lib/output";
-import { ThemeProvider } from "@/lib/styledComponents";
 import defaultTheme from "@/themes/default";
 import Html from "@/views/ssr";
 
@@ -43,24 +50,33 @@ export default function(output: Output) {
   return async (ctx: Context) => {
 
     // Create a new Apollo client
-    const client = createClient();
+    const client = createClient(ctx);
 
-    // Create a new styled-components instance
-    const sheet = new ServerStyleSheet();
+    // Create a sheetsRegistry instance.
+    const sheetsRegistry = new SheetsRegistry();
+
+    // Create a sheetsManager instance.
+    const sheetsManager = new Map();
+
+    // Create a theme instance.
+    const theme = createMuiTheme(defaultTheme);
 
     // Create a fresh 'context' for React Router
     const routerContext: IRouterContext = {};
 
+    // Create a new class name generator.
+    const generateClassName = createGenerateClassName();
+
     const components = (
-      <StyleSheetManager sheet={sheet.instance}>
-        <ThemeProvider theme={defaultTheme}>
+      <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
+        <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
           <ApolloProvider client={client}>
             <StaticRouter location={ctx.request.url} context={routerContext}>
               <Root />
             </StaticRouter>
           </ApolloProvider>
-        </ThemeProvider>
-      </StyleSheetManager>
+        </MuiThemeProvider>
+      </JssProvider>
     );
 
     // Render the Apollo tree
@@ -96,7 +112,7 @@ export default function(output: Output) {
         css={output.client.main("css")!}
         helmet={Helmet.renderStatic()}
         js={output.client.main("js")!}
-        styles={sheet.getStyleElement()}
+        styles={sheetsRegistry.toString()}
         window={{
           __APOLLO_STATE__: client.extract(),
         }}>
