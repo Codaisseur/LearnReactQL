@@ -1,8 +1,4 @@
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -35,7 +31,7 @@ const SignUp = decorate(({ classes }: ISignUp & WithStyles<any>) => (
       <Avatar className={classes.avatar}>
         <LockIcon />
       </Avatar>
-      <Typography variant="headline">Sign in</Typography>
+      <Typography variant="headline">Sign up</Typography>
       <SignUpForm />
     </Paper>
   </React.Fragment>
