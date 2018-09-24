@@ -6,7 +6,8 @@ import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import * as React from "react";
 import { Mutation, MutationFn } from "react-apollo";
 
-import { setAuthenticatedMutation, signUpMutation } from "@/components/auth/mutations";
+import { setAuthenticatedMutation, signInMutation, signUpMutation } from "@/components/auth/mutations";
+import { storeToken } from "@/graphql/apollo";
 
 const decorate = withStyles(({ spacing }) => ({
   paper: {
@@ -25,6 +26,7 @@ interface ISignUpForm {
   errors?: any;
   onSubmit: MutationFn;
   setAuthenticated: MutationFn;
+  signIn: MutationFn;
 }
 
 interface ISignUpFormState {
@@ -47,7 +49,7 @@ const SignUpForm = decorate(
   public handleSubmit = (event: any) => {
     event.preventDefault();
 
-    const { onSubmit, setAuthenticated } = this.props;
+    const { onSubmit, setAuthenticated, signIn } = this.props;
     const { email, firstName, lastName, password } = this.state;
 
     onSubmit({
@@ -58,6 +60,15 @@ const SignUpForm = decorate(
         password,
       },
     })
+      .then(() => (
+        signIn({
+          variables: {
+            email,
+            password,
+          },
+        })
+      ))
+      .then((res: any) => storeToken(res.data.signIn.token))
       .then(() => setAuthenticated())
       .catch(console.error);
   }
@@ -132,9 +143,13 @@ const SignUpForm = decorate(
 });
 
 const mapMutationsToProps = (signUp: MutationFn<any>) => (
-  <Mutation mutation={setAuthenticatedMutation}>
-    {(setAuthenticated: MutationFn<any>) => (
-      <SignUpForm onSubmit={signUp} setAuthenticated={setAuthenticated} />
+  <Mutation mutation={signInMutation}>
+    {(signIn: MutationFn) => (
+      <Mutation mutation={setAuthenticatedMutation}>
+        {(setAuthenticated: MutationFn<any>) => (
+          <SignUpForm onSubmit={signUp} setAuthenticated={setAuthenticated} signIn={signIn} />
+        )}
+      </Mutation>
     )}
   </Mutation>
 );

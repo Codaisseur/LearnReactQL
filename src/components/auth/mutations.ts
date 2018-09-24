@@ -32,3 +32,30 @@ export const signUpMutation = gql`
     }
   }
 `;
+
+export interface ISignInInput {
+  email?: string;
+  password?: string;
+}
+
+export interface ISignInResponse {
+  data: {
+    signIn: {
+      token: string;
+    };
+  };
+}
+
+export const signInMutation = gql`
+  mutation SignIn(
+    $email: String!
+    $password: String!
+   ) {
+    signIn(data: {
+      email: $email
+      password: $password
+    }) {
+      token
+    }
+  }
+`;

@@ -18,6 +18,10 @@ import createState from "./state";
 export const API_URL = process.env.NODE_ENV === "production" ? "https://crystal.codaisseur.com" : "http://localhost:4000";
 export const JWT_TOKEN_KEY = "CodaisseurJWT";
 
+export const storeToken = (token: string) => {
+  window.localStorage.setItem(JWT_TOKEN_KEY, token);
+};
+
 // ----------------------------------------------------------------------------
 
 export function createClient(ctx?: Context): ApolloClient<NormalizedCacheObject> {
@@ -78,8 +82,6 @@ export function createClient(ctx?: Context): ApolloClient<NormalizedCacheObject>
         }
 
         if (token) {
-          console.log(token);
-
           return {
             headers: {
               Authorization: `Bearer ${token}`,
